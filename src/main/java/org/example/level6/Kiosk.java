@@ -9,7 +9,7 @@ public class Kiosk {
     //필드
     private List<Menu> menu = new ArrayList<>(); //메뉴 객체들을 관리하는 리스트
     private List<MenuItem> shoppingCart = new ArrayList<>(); //선택된 MenuItem객체들을 관리하는 리스트(장바구니)
-    private UserType type;
+    //private UserType type;
 
     //생성자
     public Kiosk(Menu ... menus) {
