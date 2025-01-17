@@ -14,7 +14,7 @@ public class Kiosk {
     public Kiosk(Menu ... menus) {
         //키오스크 객체 생성시 여러개의 Menu객체들을 받아와 menu리스트에 add
         for (Menu a : menus) {
-            menu.add(a);
+            this.menu.add(a);
         }
     }
 

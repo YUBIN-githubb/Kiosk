@@ -25,9 +25,9 @@ public class Main {
         dessertMenuItems.add(new MenuItem("Ice cream", 2.0, "우유 아이스크림"));
         dessertMenuItems.add(new MenuItem("Pudding", 2.5, "달달한 커스터드 푸딩"));
 
-        Menu burgers = new Menu("Burgers", burgerMenuItems);
-        Menu beverages = new Menu("Beverages", beverageMenuItems);
-        Menu desserts = new Menu("Desserts", dessertMenuItems);
+        Menu burgers = new Menu(CategoryType.Burgers, burgerMenuItems);
+        Menu beverages = new Menu(CategoryType.Beverages, beverageMenuItems);
+        Menu desserts = new Menu(CategoryType.Desserts, dessertMenuItems);
 
         Kiosk kiosk = new Kiosk(burgers, beverages, desserts);
         kiosk.start();

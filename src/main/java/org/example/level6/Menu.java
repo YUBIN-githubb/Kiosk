@@ -9,10 +9,10 @@ public class Menu {
     //필드
     //MenuItem 클래스를 리스트로 관리
     private List<MenuItem> menuItems = new ArrayList<>();
-    private String category;
+    private CategoryType category;
 
     //생성자
-    public Menu(String category, List<MenuItem> menuItems) {
+    public Menu(CategoryType category, List<MenuItem> menuItems) {
         this.category = category;
         this.menuItems = menuItems;
     }
@@ -32,6 +32,6 @@ public class Menu {
 
     //카테고리를 리턴하는 함수
     public String getCategory() {
-        return category;
+        return category.name();
     }
 }
