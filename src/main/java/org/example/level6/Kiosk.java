@@ -8,6 +8,7 @@ public class Kiosk {
     //필드
     private List<Menu> menu = new ArrayList<>(); //메뉴 객체들을 관리하는 리스트
     private List<MenuItem> shoppingCart = new ArrayList<>(); //선택된 MenuItem객체들을 관리하는 리스트(장바구니)
+    private UserType type;
 
     //생성자
     public Kiosk(Menu ... menus) {
@@ -27,6 +28,7 @@ public class Kiosk {
         int cartChoice;
         int orderChoice;
         int finalChoice;
+        int typeChoice;
 
         while (true) {
             //카테고리 출력
@@ -42,7 +44,7 @@ public class Kiosk {
 
                     while (true) {
                         //메뉴 출력
-                        showMenu(menu,categoryChoice);
+                        showMenu(categoryChoice);
 
                         //메뉴 선택
                         System.out.println("메뉴를 선택하세요: ");
@@ -71,15 +73,34 @@ public class Kiosk {
                                 if (orderChoice == 4) {
                                     System.out.println("아래와 같이 주문하시겠습니까?\n");
                                     //장바구니에 담긴 메뉴들 출력
-                                    showShoppingCartMenu(shoppingCart);
+                                    showShoppingCartMenu();
 
                                     //finalChoice 입력
                                     System.out.println("1. 주문      2. 메뉴판");
                                     finalChoice = sc.nextInt();
 
                                     if (finalChoice == 1) {
+                                        //할인 적용
                                         //주문완료 메세지 + 총 금액 출력
-                                        System.out.println("주문이 완료되었습니다. 총 금액은 W" + calculateTotal(shoppingCart) + "입니다. " );
+                                        System.out.println("할인 유형을 입력해주세요.: ");
+                                        System.out.println("1. 국가유공자 : 10%");
+                                        System.out.println("2. 군인     :  5%");
+                                        System.out.println("3. 학생     :  3%");
+                                        System.out.println("4. 일반     :  0%");
+                                        typeChoice = sc.nextInt();
+
+                                        if (typeChoice == 1) {
+                                            System.out.println("주문이 완료되었습니다. 총 금액은 W" + discount(UserType.국가유공자) + "입니다.\n" );
+                                        } else if (typeChoice == 2) {
+                                            System.out.println("주문이 완료되었습니다. 총 금액은 W" + discount(UserType.군인) + "입니다.\n" );
+                                        } else if (typeChoice == 3) {
+                                            System.out.println("주문이 완료되었습니다. 총 금액은 W" + discount(UserType.학생) + "입니다.\n" );
+                                        } else if (typeChoice == 4) {
+                                            System.out.println("주문이 완료되었습니다. 총 금액은 W" + discount(UserType.일반) + "입니다.\n" );
+                                        } else {
+                                            throw new Exception();
+                                        }
+
                                         //장바구니 비워주기
                                         shoppingCart.clear();
 
@@ -146,15 +167,15 @@ public class Kiosk {
     public void showCategory() {
         System.out.println("[MENU CATEGORY]");
         //for문 돌면서 카테고리 출력
-        for (int i = 1; i <= menu.size(); i++) {
-            System.out.println(i + ". " + menu.get(i-1).getCategory()); //Menu 객체의 getCategory() 이용
+        for (int i = 1; i <= this.menu.size(); i++) {
+            System.out.println(i + ". " + this.menu.get(i-1).getCategory()); //Menu 객체의 getCategory() 이용
         }
         System.out.println("0. 종료      | 종료\n");
 
     }
 
     //선택된 카테고리에 따른 메뉴들을 출력하는 메서드
-    public void showMenu(List<Menu> menu, int categoryChoice) {
+    public void showMenu(int categoryChoice) {
         //선택된 카테고리에 따라 메뉴 카테고리 이름 출력
         if (categoryChoice == 1) {
             System.out.println("[BURGERS MENU]");
@@ -165,13 +186,13 @@ public class Kiosk {
         }
 
         //선택된 카테고리에 따라 해당 카테고리에 속한 메뉴들을 for문 돌면서 출력
-        for (int i = 1; i < menu.get(categoryChoice-1).getMenuItems().size(); i++) {
+        for (int i = 1; i < this.menu.get(categoryChoice-1).getMenuItems().size(); i++) {
             //Menu를 관리하는 리스트에서 해당하는 카테고리로 인덱스 접근 -> getMenuItems()를 이용해서 MenuItem을 관리하는 리스트에 접근 ->
             //for문의 i를 통해 차례대로 인덱스를 통해 접근 -> 접근한 MenuItem 리스트에 getName(), getPrice(), getDescription() 이용해서 값 출력
             System.out.print(i + ". ");
-            System.out.printf("%-14s |",menu.get(categoryChoice-1).getMenuItems().get(i).getName());
-            System.out.printf(" W %-3s | ",menu.get(categoryChoice-1).getMenuItems().get(i).getPrice());
-            System.out.print(menu.get(categoryChoice-1).getMenuItems().get(i).getDescription()+"\n");
+            System.out.printf("%-14s |",this.menu.get(categoryChoice-1).getMenuItems().get(i).getName());
+            System.out.printf(" W %-3s | ",this.menu.get(categoryChoice-1).getMenuItems().get(i).getPrice());
+            System.out.print(this.menu.get(categoryChoice-1).getMenuItems().get(i).getDescription()+"\n");
         }
         System.out.println("0. 뒤로가기\n");
     }
@@ -179,9 +200,9 @@ public class Kiosk {
     //선택된 MenuItem의 정보를 출력하는 메서드
     public void showSelectedMenu(int categoryChoice, int menuChoice) {
         System.out.print("선택된 메뉴 : ");
-        System.out.printf("%-14s |",menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getName());
-        System.out.printf(" W %-3s | ",menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getPrice());
-        System.out.print(menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getDescription()+"\n");
+        System.out.printf("%-14s |",this.menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getName());
+        System.out.printf(" W %-3s | ",this.menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getPrice());
+        System.out.print(this.menu.get(categoryChoice-1).getMenuItems().get(menuChoice).getDescription()+"\n");
 
     }
 
@@ -199,11 +220,11 @@ public class Kiosk {
     }
 
     //장바구니에 담긴 MenuItem을 출력 + 총 결제금액을 출력하는 메서드
-    public void showShoppingCartMenu(List<MenuItem> shoppingCart) {
+    public void showShoppingCartMenu() {
         double totalSum = 0;
 
         System.out.println("[ORDERS]");
-        for (MenuItem a : shoppingCart) {
+        for (MenuItem a : this.shoppingCart) {
             System.out.printf("%-14s |",a.getName());
             System.out.printf(" W %-3s | ",a.getPrice());
             System.out.print(a.getDescription()+"\n");
@@ -215,11 +236,20 @@ public class Kiosk {
 
     }
 
-    //총 결제금액을 반환하는 메서드
-    public double calculateTotal(List<MenuItem> shoppingCart) {
+    //할인적용 + 총 결제 금액을 반환하는 메서드
+    public double discount(UserType type) {
         double total = 0;
-        for (MenuItem a : shoppingCart) {
+        for (MenuItem a : this.shoppingCart) {
             total += a.getPrice();
+        }
+        if (type == UserType.국가유공자) {
+            total -= total * 0.1;
+        } else if (type == UserType.군인) {
+            total -= total * 0.05;
+        } else if (type == UserType.학생) {
+            total -= total * 0.01;
+        } else if (type == UserType.일반) {
+            total = total;
         }
 
         return total;
